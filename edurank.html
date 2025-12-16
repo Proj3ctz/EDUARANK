@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDURANK – San Beda College Alabang</title>
+  <style>
+    :root {
+      --primary-red: #b11226;
+      --dark-red: #8f0f1f;
+      --light-gray: #f5f5f5;
+      --text-dark: #222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--primary-red);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: auto;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: var(--dark-red);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    h1, h2 {
+      color: var(--primary-red);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .rank {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      margin-bottom: 0.4rem;
+    }
+
+    .score {
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    th, td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--primary-red);
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      margin-top: 3rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-container">
+    <div class="brand">EDURANK</div>
+    <nav>
+      <ul>
+        <li><a href="#home" class="active" onclick="showPage('home')">Home</a></li>
+        <li><a href="#about" onclick="showPage('about')">About Us</a></li>
+        <li><a href="#page1" onclick="showPage('page1')">Page 1</a></li>
+        <li><a href="#page2" onclick="showPage('page2')">Page 2</a></li>
+        <li><a href="#page3" onclick="showPage('page3')">Page 3</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="home" class="active">
+    <h1>EDURANK: A Data-Driven Tertiary School Ranking System for San Beda College Alabang</h1>
+    <p>EDURANK is a data-driven academic evaluation platform designed to rank tertiary-level faculty members based on quantifiable performance indicators. The system promotes transparency, accountability, and continuous professional development.</p>
+
+    <h2>Top Ranked Faculty</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="rank">Rank #1</div>
+        <h3>Dr. Maria Santos</h3>
+        <p>Department of Computer Science</p>
+        <p>Specializes in data analytics and systems engineering.</p>
+        <div class="score">Score: 95.4</div>
+      </div>
+      <div class="card">
+        <div class="rank">Rank #2</div>
+        <h3>Prof. Juan Dela Cruz</h3>
+        <p>Department of Business Management</p>
+        <p>Focuses on strategic management and research methods.</p>
+        <div class="score">Score: 92.1</div>
+      </div>
+      <div class="card">
+        <div class="rank">Rank #3</div>
+        <h3>Ms. Angela Reyes</h3>
+        <p>Department of Education</p>
+        <p>Expert in curriculum design and instructional technology.</p>
+        <div class="score">Score: 90.7</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <h1>About Us</h1>
+    <p>EDURANK was conceptualized to support institutional decision-making through objective academic performance metrics. It aggregates teaching effectiveness, research output, service contributions, and student feedback.</p>
+    <p>The system is tailored for San Beda College Alabang, aligning with its commitment to excellence, innovation, and evidence-based evaluation.</p>
+  </section>
+
+  <section id="page1">
+    <h1>Page 1 – Ranking Overview</h1>
+    <p>This page provides a tabular overview of faculty rankings based on composite scores.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Dr. Maria Santos</td>
+          <td>Computer Science</td>
+          <td>95.4</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Prof. Juan Dela Cruz</td>
+          <td>Business Management</td>
+          <td>92.1</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Ms. Angela Reyes</td>
+          <td>Education</td>
+          <td>90.7</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="page2">
+    <h1>Page 2 – Evaluation Criteria</h1>
+    <p>Faculty rankings are derived from weighted performance indicators.</p>
+    <ul>
+      <li>Teaching Effectiveness</li>
+      <li>Research and Publications</li>
+      <li>Community and Institutional Service</li>
+      <li>Student Feedback Scores</li>
+    </ul>
+  </section>
+
+  <section id="page3">
+    <h1>Page 3 – System Insights</h1>
+    <p>EDURANK enables administrators to identify strengths, gaps, and trends across departments.</p>
+    <p>Data visualization, historical comparisons, and benchmarking support strategic planning and faculty development initiatives.</p>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 EDURANK – San Beda College Alabang</p>
+</footer>
+
+<script>
+  function showPage(pageId) {
+    const sections = document.querySelectorAll('main section');
+    const links = document.querySelectorAll('nav a');
+
+    sections.forEach(sec => sec.classList.remove('active'));
+    links.forEach(link => link.classList.remove('active'));
+
+    document.getElementById(pageId).classList.add('active');
+    document.querySelector(`nav a[href="#${pageId}"]`).classList.add('active');
+  }
+</script>
+
+</body>
+</html>
