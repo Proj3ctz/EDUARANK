@@ -1,3 +1,25 @@
+<!-- <?php
+require '../session_guard.php';
+require '../db.php';   
+
+$profilePhoto = '../assets/avatar.png';
+
+$stmt = $conn->prepare("
+  SELECT profile_photo 
+  FROM teacher_profiles 
+  WHERE user_id = ?
+");
+$stmt->bind_param("i", $_SESSION['uid']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+    if (!empty($row['profile_photo'])) {
+        $profilePhoto = $row['profile_photo'];
+    }
+}
+
+?> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +27,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EDURANK – San Beda College Alabang</title>
   <style>
+
+html, body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      main {
+        flex: 1;
+      }
+      
     :root {
       --primary-red: #b11226;
       --dark-red: #8f0f1f;
@@ -98,7 +135,6 @@
       gap: 1.5rem;
       margin-top: 1.5rem;
     }
-
     .card {
       background: #fff;
       border-radius: 8px;
@@ -168,116 +204,597 @@
         margin-top: 0.8rem;
       }
     }
+      
+  /* Footer */
+  footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 14px 10px;
+    font-size: 0.8rem;
+    color: #666;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    word-wrap: break-word;
+  }
+
+/* CERTIFICATION PAGE LAYOUT */
+.cert-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* PANELS */
+.cert-left,
+.cert-right {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* HEADERS */
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cert-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--primary-red);
+}
+
+/* BUTTONS */
+.btn-outline {
+  background: #fff;
+  color: var(--primary-red);
+  border: 1px solid var(--primary-red);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: var(--primary-red);
+  color: #fff;
+}
+
+.btn-primary {
+  background: var(--primary-red);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* CATEGORY TREE */
+.category-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.category.active {
+  border-left: 4px solid var(--primary-red);
+  background: #fdf1f3;
+}
+
+.category ul {
+  list-style: none;
+  padding-left: 16px;
+  margin-top: 8px;
+}
+
+.category ul li {
+  padding: 6px 0;
+}
+
+.highlight {
+  color: var(--primary-red);
+  font-weight: 600;
+}
+
+/* RIGHT CONTENT */
+.cert-content {
+  padding-top: 10px;
+}
+
+.muted {
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.move-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.move-box select {
+  padding: 6px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .cert-container {
+    grid-template-columns: 1fr;
+  }
+}
+/* Academic Qualification Tree */
+.aq-tree {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+.aq-tree li {
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.node-label {
+  font-weight: 600;
+}
+
+.toggle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  border: 1px solid var(--primary-red);
+  color: var(--primary-red);
+  font-weight: bold;
+  margin-right: 8px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.nested {
+  display: none;
+  margin-left: 26px;
+  margin-top: 6px;
+}
+
+.leaf {
+  font-weight: normal;
+  color: #444;
+  padding-left: 28px;
+  display: block;
+}
+
+.expanded > .nested {
+  display: block;
+}
+.nested {
+  display: none;
+  margin-left: 20px;
+}
+
+.nested.active {
+  display: block;
+}
+
+.toggle {
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.leaf {
+  padding-left: 22px;
+}
+/* EXTRA INDENT FOR ALL UNDER ACADEMIC QUALIFICATION */
+.aq-tree > li > .nested {
+  margin-left: 40px;
+}
+
+/* Deeper levels */
+.aq-tree .nested .nested {
+  margin-left: 22px;
+}
+
+/* Visual spacing between items */
+.aq-tree li {
+  margin: 6px 0;
+}
+
+/* Leaves spacing */
+.leaf {
+  padding-left: 18px;
+}
+.aq-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.aq-tree li {
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.toggle {
+  display: inline-block;
+  width: 18px;
+  font-weight: bold;
+  color: #b11226;
+}
+
+.node-label {
+  font-weight: 600;
+}
+
+.nested {
+  display: none;
+  margin-left: 28px;
+  margin-top: 6px;
+}
+
+.nested .nested {
+  margin-left: 22px;
+}
+
+.leaf {
+  padding-left: 18px;
+  cursor: default;
+}
+/* REMOVE BULLETS FROM TREE */
+.aq-tree,
+.aq-tree ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+/* ALIGN TOGGLES NICELY */
+.aq-tree li {
+  position: relative;
+  padding-left: 18px;
+}
+  /* Header profile picture */
+  .header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-profile-pic {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+
   </style>
 </head>
 <body>
 
 <header>
-  <div class="nav-container">
-    <div class="brand">EDURANK</div>
+<div class="nav-container">
+  <div class="brand header-brand">
+  <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile"
+       class="header-profile-pic">
+  <span>EDURANK</span>
+</div>
     <nav>
       <ul>
-        <li><a href="#home" class="active" onclick="showPage('home')">Home</a></li>
-        <li><a href="#about" onclick="showPage('about')">About Us</a></li>
-        <li><a href="#page1" onclick="showPage('page1')">Page 1</a></li>
-        <li><a href="#page2" onclick="showPage('page2')">Page 2</a></li>
-        <li><a href="#page3" onclick="showPage('page3')">Page 3</a></li>
+        <li><a href="dashboard.php">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="profile_view.php">Profile View</a></li>
+        <li><a href="profile.php">Edit Profile</a></li>
+        <li><a href="certification.php" class="active">Certification</a></li>
+        <li><a href="../logout.php">Logout</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
+
 <main>
+<div class="cert-container">
 
-  <section id="home" class="active">
-    <h1>EDURANK: A Data-Driven Tertiary School Ranking System for San Beda College Alabang</h1>
-    <p>EDURANK is a data-driven academic evaluation platform designed to rank tertiary-level faculty members based on quantifiable performance indicators. The system promotes transparency, accountability, and continuous professional development.</p>
+  <!-- LEFT PANEL -->
+  <div class="card">
+  <h2>Faculty Certification</h2>
 
-    <h2>Top Ranked Faculty</h2>
-    <div class="card-grid">
-      <div class="card">
-        <div class="rank">Rank #1</div>
-        <h3>Dr. Maria Santos</h3>
-        <p>Department of Computer Science</p>
-        <p>Specializes in data analytics and systems engineering.</p>
-        <div class="score">Score: 95.4</div>
-      </div>
-      <div class="card">
-        <div class="rank">Rank #2</div>
-        <h3>Prof. Juan Dela Cruz</h3>
-        <p>Department of Business Management</p>
-        <p>Focuses on strategic management and research methods.</p>
-        <div class="score">Score: 92.1</div>
-      </div>
-      <div class="card">
-        <div class="rank">Rank #3</div>
-        <h3>Ms. Angela Reyes</h3>
-        <p>Department of Education</p>
-        <p>Expert in curriculum design and instructional technology.</p>
-        <div class="score">Score: 90.7</div>
+  <ul class="aq-tree">
+
+    <!-- ACADEMIC QUALIFICATION (TOP LEVEL) -->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Academic Qualification</span>
+        <ul class="nested">
+          <li class="leaf">Bachelor's Degree</li>
+          <li>
+            <span class="toggle" onclick="toggleNode(this)">+</span>
+            <span class="node-label">Master's Degree</span>
+              <ul class="nested">
+                <li class="leaf">Thesis Program</li>
+                <li class="leaf">Non-Thesis Program</li>
+              </ul>
+          </li>
+          <li class="leaf">Additional Master's Degree</li>
+          <li class="leaf">Additional Bachelor's Degree</li>
+          <li class="leaf">Doctorate Degree</li>      
+        </ul>
+    </li>
+
+    <li>
+    <!-- Current study -->
+    <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Current study</span>
+        <ul class="nested">
+                          <table border="1" width="100%" cellspacing="0" cellpadding="6">
+
+                  <!-- CATEGORY -->
+                  <tr class="category-row" data-target="current-study-masteral">
+                    <td colspan="5"><strong>Current Study – First Masteral Degree Program</strong></td>
+                  </tr>
+
+                  <!-- EXPAND -->
+                  <tr id="current-study-masteral" class="hidden">
+                    <td colspan="5">
+
+                      <table width="100%" border="1" cellspacing="0" cellpadding="5">
+                        <thead>
+                          <tr>
+                            <th>No. of Units</th>
+                            <th>Pts (Thesis)</th>
+                            <th>Pts (Non-Thesis)</th>
+                            <th>Completion (Thesis)</th>
+                            <th>Completion (Non-Thesis)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                          <tr>
+                            <td>Comprehensive Exams</td>
+                            <td><input type="checkbox" name="degree[]" value="30"></td>
+                            <td><input type="checkbox" name="degree[]" value="25"></td>
+                            <td><input type="checkbox" name="degree[]" value="20"></td>
+                            <td><input type="checkbox" name="degree[]" value="15"></td>
+                          </tr>
+
+                          <tr>
+                            <td>52–55</td>
+                            <td><input type="checkbox" name="degree[]" value="30"></td>
+                            <td><input type="checkbox" name="degree[]" value="22"></td>
+                            <td><input type="checkbox" name="degree[]" value="20"></td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                          </tr>
+
+                          <tr>
+                            <td>46–49</td>
+                            <td><input type="checkbox" name="degree[]" value="30"></td>
+                            <td><input type="checkbox" name="degree[]" value="22"></td>
+                            <td><input type="checkbox" name="degree[]" value="20"></td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                          </tr>
+
+                          <tr>
+                            <td>42–45</td>
+                            <td><input type="checkbox" name="degree[]" value="30"></td>
+                            <td><input type="checkbox" name="degree[]" value="22"></td>
+                            <td><input type="checkbox" name="degree[]" value="20"></td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                          </tr>
+
+                          <tr>
+                            <td>36–39</td>
+                            <td><input type="checkbox" name="degree[]" value="30"></td>
+                            <td><input type="checkbox" name="degree[]" value="22"></td>
+                            <td><input type="checkbox" name="degree[]" value="20"></td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                          </tr>
+
+                          <tr>
+                            <td>30–33</td>
+                            <td><input type="checkbox" name="degree[]" value="26"></td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                            <td><input type="checkbox" name="degree[]" value="24"></td>
+                            <td><input type="checkbox" name="degree[]" value="22"></td>
+                          </tr>
+
+                          <tr>
+                            <td>24–27</td>
+                            <td><input type="checkbox" name="degree[]" value="24"></td>
+                            <td><input type="checkbox" name="degree[]" value="14"></td>
+                            <td><input type="checkbox" name="degree[]" value="26"></td>
+                            <td><input type="checkbox" name="degree[]" value="26"></td>
+                          </tr>
+
+                          <tr>
+                            <td>18–21</td>
+                            <td><input type="checkbox" name="degree[]" value="18"></td>
+                            <td><input type="checkbox" name="degree[]" value="12"></td>
+                            <td><input type="checkbox" name="degree[]" value="32"></td>
+                            <td><input type="checkbox" name="degree[]" value="28"></td>
+                          </tr>
+
+                          <tr>
+                            <td>12–15</td>
+                            <td><input type="checkbox" name="degree[]" value="12"></td>
+                            <td><input type="checkbox" name="degree[]" value="8"></td>
+                            <td><input type="checkbox" name="degree[]" value="38"></td>
+                            <td><input type="checkbox" name="degree[]" value="32"></td>
+                          </tr>
+
+                          <tr>
+                            <td>6–9</td>
+                            <td><input type="checkbox" name="degree[]" value="6"></td>
+                            <td><input type="checkbox" name="degree[]" value="4"></td>
+                            <td><input type="checkbox" name="degree[]" value="44"></td>
+                            <td><input type="checkbox" name="degree[]" value="36"></td>
+                          </tr>
+
+                          <tr>
+                            <td>3</td>
+                            <td><input type="checkbox" name="degree[]" value="2"></td>
+                            <td><input type="checkbox" name="degree[]" value="2"></td>
+                            <td><input type="checkbox" name="degree[]" value="48"></td>
+                            <td><input type="checkbox" name="degree[]" value="38"></td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+
+                    </td>
+                  </tr>
+
+</table>
+
+        </ul>
+    </li>
+
+    <li>
+    <!-- Scholastic -->
+    <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Scholastic Honors / Awards</span>
+        <ul class="nested">
+          <li class="leaf">Summa Cum Laude</li>
+          <li class="leaf">Magna Cum Laude</li>
+          <li class="leaf">Cum Laude</li>
+          <li class="leaf">Foreign Grants</li>
+          <li class="leaf">National Grants</li>
+          <li class="leaf">Professional Chair</li>
+        </ul>
+    </li>
+
+    <!-- Government Exam -->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Government Exam / Professional License</span>
+
+      <ul class="nested">
+        <li class="leaf">Career Service Professional</li>
+        <li class="leaf">Career Sub-Professional</li>
+        <li class="leaf">LET-PRC</li>
+        <li class="leaf">Medicine-PRC</li>
+        <li class="leaf">Engineering-PRC</li>
+        <li class="leaf">CPA-PRC</li>
+        <li class="leaf">Bar – Supreme Court</li>
+        <li class="leaf">Accredited Trade License</li>
+        <li class="leaf">Professional Certificates from Industry Vendors </li>
+      </ul>
+    </li>
+
+    <!-- Attendance at seminars, lectures/training programs related to field of teaching-->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Attendance at seminars, lectures/training programs related to field of teaching</span>
+
+      <ul class="nested">
+        <li class="leaf">Local</li>
+        <li class="leaf">National </li>
+        <li class="leaf">International </li>
+      </ul>
+    </li>
+
+    <!-- Participation at seminars, lectures/training programs related to field of teaching-->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Participation at seminars, lectures/training programs related to field of teaching</span>
+
+      <ul class="nested">
+        <li class="leaf">Speaker/Organizer</li>
+        <li class="leaf">Committee Member</li>
+        <li class="leaf">Facilitator</li>
+      </ul>
+    </li>
+
+    <!--Completion of other short-term courses leading to professional growth (regardless of duration) -->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Completion of other short-term courses leading to professional growth (regardless of duration) </span>
+
+      <ul class="nested">
+        <li class="leaf">Related to field of teaching</li>
+        <li class="leaf">Not related to field of teaching</li>
+      </ul>
+    </li>
+
+    <!--Authorized School Delegate/Representative in Conventions -->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Authorized School Delegate/Representative in Conventions </span>
+
+      <ul class="nested">
+        <li class="leaf">Local/Regional</li>
+        <li class="leaf">National</li>
+        <li class="leaf">International </li>
+      </ul>
+    </li>
+
+    <!--Professional Performance -->
+    <li>
+      <span class="toggle" onclick="toggleNode(this)">+</span>
+      <span class="node-label">Professional Performance </span>
+
+      <ul class="nested">                
+            <span class="toggle" onclick="toggleNode(this)">+</span>
+            <span class="node-label">Addresses before academic/professional functions outside SBCA either as 
+            speaker or facilitator in services (limited to 5 engagements in a year)</span>
+                <ul class="nested">
+                  <li class="leaf">Local/Regional</li>
+                  <li class="leaf">National</li>
+                  <li class="leaf">International </li>
+                </ul>  
+              <br>
+            <l1>
+            <span class="toggle" onclick="toggleNode(this)">+</span>
+            <span class="node-label">Publication of scholarly articles</span>
+                        <ul class="nested">
+                          <li class="leaf">SBCA</li>
+                          <li class="leaf">National</li>
+                          <li class="leaf">International </li>
+                        </ul>  
+            </li>            
+                      
+          
+        
+        
+      </ul>
+    </li>
+  
+  </ul>
+</div>
+
+
+  <!-- RIGHT PANEL -->
+  <div class="cert-right">
+    <div class="cert-header">
+      <h2>Upload Softcopy of Documents</h2>
+      <button class="btn-outline">Create new course</button>
+    </div>
+
+    <div class="cert-content">
+      <p class="muted">No courses in this category</p>
+
+      <div class="move-box">
+        <label>Selected Files to…</label>
+        <select>
+          <option>Choose…</option>
+        </select>
+        <button class="btn-primary">Move</button>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section id="about">
-    <h1>About Us</h1>
-    <p>EDURANK was conceptualized to support institutional decision-making through objective academic performance metrics. It aggregates teaching effectiveness, research output, service contributions, and student feedback.</p>
-    <p>The system is tailored for San Beda College Alabang, aligning with its commitment to excellence, innovation, and evidence-based evaluation.</p>
-  </section>
+</div>
 
-  <section id="page1">
-    <h1>Page 1 – Ranking Overview</h1>
-    <p>This page provides a tabular overview of faculty rankings based on composite scores.</p>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          <th>Department</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Dr. Maria Santos</td>
-          <td>Computer Science</td>
-          <td>95.4</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Prof. Juan Dela Cruz</td>
-          <td>Business Management</td>
-          <td>92.1</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Ms. Angela Reyes</td>
-          <td>Education</td>
-          <td>90.7</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section id="page2">
-    <h1>Page 2 – Evaluation Criteria</h1>
-    <p>Faculty rankings are derived from weighted performance indicators.</p>
-    <ul>
-      <li>Teaching Effectiveness</li>
-      <li>Research and Publications</li>
-      <li>Community and Institutional Service</li>
-      <li>Student Feedback Scores</li>
-    </ul>
-  </section>
-
-  <section id="page3">
-    <h1>Page 3 – System Insights</h1>
-    <p>EDURANK enables administrators to identify strengths, gaps, and trends across departments.</p>
-    <p>Data visualization, historical comparisons, and benchmarking support strategic planning and faculty development initiatives.</p>
-  </section>
-
+ 
 </main>
 
 <footer>
@@ -296,6 +813,30 @@
     document.querySelector(`nav a[href="#${pageId}"]`).classList.add('active');
   }
 </script>
+<script>
+function toggleNode(el) {
+  const parent = el.parentElement;
+  parent.classList.toggle('expanded');
+
+  el.textContent = parent.classList.contains('expanded') ? '−' : '+';
+}
+</script>
+<script>
+function toggleNode(el) {
+  const nested = el.parentElement.querySelector(".nested");
+  if (!nested) return;
+
+  if (nested.style.display === "block") {
+    nested.style.display = "none";
+    el.textContent = "+";
+  } else {
+    nested.style.display = "block";
+    el.textContent = "−";
+  }
+}
+</script>
 
 </body>
 </html>
+
+
